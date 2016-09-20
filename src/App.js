@@ -1,25 +1,45 @@
-
 import React from 'react';
 import './App.css';
+import xhr from 'xhr';
 
 
 class App extends React.Component {
-    state = {
-    location: ''
+  state = {
+    location: '',
+    data: {}
   };
 
   fetchData = (evt) => {
     evt.preventDefault();
-    console.log('fetch data for', this.state.location);
-  };
 
-    changeLocation = (evt) => {
+    var location = encodeURIComponent(this.state.location);
+
+    var urlPrefix = 'http://api.openweathermap.org/data/2.5/forecast?q=';
+    var urlSuffix = '&APPID=d5bcb5d2af182c505e66dd7b13cdb10b&units=imperial';
+    var url = urlPrefix + location + urlSuffix;
+
+    var self = this;
+
+    xhr({
+      url: url
+    }, function (err, data) {
+      self.setState({
+        data: JSON.parse(data.body)
+      })
+    })
+  }
+
+  changeLocation = (evt) => {
     this.setState({
       location: evt.target.value
     });
   };
 
 render() {
+    var currentTemp = 'not loaded yet';
+    if (this.state.data.list) {
+      currentTemp = this.state.data.list[0].main.temp;
+    }
     return (
       <div>
         <h1>Weather</h1>
@@ -33,6 +53,10 @@ render() {
             />
           </label>
         </form>
+        <p className="temp-wrapper">
+          <span className="temp">{ currentTemp }</span>
+          <span className="temp-symbol">°C</span>
+        </p>
       </div>
     );
   }
