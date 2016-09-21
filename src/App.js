@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import xhr from 'xhr';
+import Plot from './Plot';
 
 
 class App extends React.Component {
@@ -57,6 +58,7 @@ render() {
           <span className="temp">{ currentTemp }</span>
           <span className="temp-symbol">°C</span>
         </p>
+      <Plot />
       </div>
     );
   }
